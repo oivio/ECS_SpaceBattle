@@ -3,10 +3,6 @@
 
 #include "SystemTasks.h"
 
-DECLARE_CYCLE_STAT(TEXT("ECS: Instance Mesh Prepare"), STAT_InstancedMeshPrepare, STATGROUP_ECS);
-DECLARE_CYCLE_STAT(TEXT("ECS: Instance Mesh Draw"), STAT_InstancedMeshDraw, STATGROUP_ECS);
-DECLARE_CYCLE_STAT(TEXT("ECS: Instance Mesh Clean"), STAT_InstancedMeshClean, STATGROUP_ECS);
-
 StaticMeshDrawSystem::ISMData* StaticMeshDrawSystem::GetInstancedMeshForMesh(UStaticMesh* mesh)
 {
 	auto find = MeshMap.Find(mesh);
@@ -191,6 +187,7 @@ void ArchetypeSpawnerSystem::update(ECS_Registry &registry, float dt)
 {
 	
 }
+
 PRAGMA_DISABLE_OPTIMIZATION
 void ArchetypeSpawnerSystem::schedule(ECSSystemScheduler* sysScheduler)
 {
@@ -296,6 +293,7 @@ void ArchetypeSpawnerSystem::schedule(ECSSystemScheduler* sysScheduler)
 
 	sysScheduler->AddTaskgraph(builder.FinishGraph());
 }
+
 PRAGMA_ENABLE_OPTIMIZATION
 void RaycastSystem::update(ECS_Registry &registry, float dt)
 {
@@ -368,10 +366,6 @@ void RaycastSystem::CreateExplosion(ECS_Registry& registry, EntityID entity, FVe
 
 	//registry.accommodate<FDestroy>(entity);
 }
-
-DECLARE_CYCLE_STAT(TEXT("ECS: Raycast BP"), STAT_RaycastBP, STATGROUP_ECS);
-DECLARE_CYCLE_STAT(TEXT("ECS: Raycast Explosions"), STAT_RaycastExplosions, STATGROUP_ECS);
-DECLARE_CYCLE_STAT(TEXT("ECS: Raycast Enqueue"), STAT_RaycastResults, STATGROUP_ECS);
 void  RaycastSystem::schedule(ECSSystemScheduler* sysScheduler)
 {
 	SystemTaskBuilder builder("RayCheck", 999, sysScheduler);
@@ -476,8 +470,6 @@ void LifetimeSystem::update(ECS_Registry& registry, float dt)
 
 
 
-DECLARE_CYCLE_STAT(TEXT("ECS: Lifetime count"), STAT_LifeCount, STATGROUP_ECS);
-DECLARE_CYCLE_STAT(TEXT("ECS: Lifetime Delete"), STAT_LifeDelete, STATGROUP_ECS);
 
 void  LifetimeSystem::schedule(ECSSystemScheduler* sysScheduler)
 {

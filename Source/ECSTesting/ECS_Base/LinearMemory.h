@@ -1,8 +1,6 @@
 #pragma once
 
-
 //linear "vector" type thing, can be reset instantly to whatever
-
 struct LinearMemory {
 	void * pointer;
 	size_t size;

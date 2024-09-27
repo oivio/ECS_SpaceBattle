@@ -8,6 +8,8 @@
 #include "LinearMemory.h"
 
 DECLARE_CYCLE_STAT(TEXT("ECS: Explosion System"), STAT_Explosion, STATGROUP_ECS);
+DECLARE_CYCLE_STAT(TEXT("ECS: Boids Update"), STAT_Boids, STATGROUP_ECS);
+DECLARE_CYCLE_STAT(TEXT("ECS: Gridmap Update"), STAT_GridmapUpdate, STATGROUP_ECS);
 
 struct ExplosionSystem :public System {
 
@@ -30,8 +32,6 @@ struct SpaceshipSystem :public System {
 };
 
 
-DECLARE_CYCLE_STAT(TEXT("ECS: Boids Update"), STAT_Boids, STATGROUP_ECS);
-DECLARE_CYCLE_STAT(TEXT("ECS: Gridmap Update"), STAT_GridmapUpdate, STATGROUP_ECS);
 struct BoidSystem :public System {
 
 	const float GRID_DIMENSION = 500.0;
@@ -134,7 +134,6 @@ struct BoidSystem :public System {
 	void UpdateAllBoids(ECS_Registry& registry, float dt);
 
 	void UpdateGridmap(ECS_Registry& registry);
-
 
 	void schedule(ECSSystemScheduler* sysScheduler) override;
 };

@@ -7,7 +7,27 @@
 #include "DrawDebugHelpers.h"
 #include "Components/InstancedStaticMeshComponent.h"
 #include "ParallelFor.h"
+
 DECLARE_CYCLE_STAT(TEXT("ECS: DebugDraw"), STAT_DebugDraw, STATGROUP_ECS);
+DECLARE_CYCLE_STAT(TEXT("ECS: Movement Update"), STAT_Movement, STATGROUP_ECS);
+DECLARE_CYCLE_STAT(TEXT("ECS: Copy Transform To ECS"), STAT_CopyTransformECS, STATGROUP_ECS);
+DECLARE_CYCLE_STAT(TEXT("ECS: Unpack Actor Transform"), STAT_UnpackActorTransform, STATGROUP_ECS);
+DECLARE_CYCLE_STAT(TEXT("ECS: Copy Transform To Actor"), STAT_CopyTransformActor, STATGROUP_ECS);
+DECLARE_CYCLE_STAT(TEXT("ECS: Pack actor transform"), STAT_PackActorTransform, STATGROUP_ECS);
+DECLARE_CYCLE_STAT(TEXT("ECS: Spanwer System"), STAT_ECSSpawn, STATGROUP_ECS);
+DECLARE_CYCLE_STAT(TEXT("ECS: Raycast System"), STAT_ECSRaycast, STATGROUP_ECS);
+DECLARE_CYCLE_STAT(TEXT("ECS: Lifetime System"), STAT_Lifetime, STATGROUP_ECS);
+
+DECLARE_CYCLE_STAT(TEXT("ECS: Instance Mesh Prepare"), STAT_InstancedMeshPrepare, STATGROUP_ECS);
+DECLARE_CYCLE_STAT(TEXT("ECS: Instance Mesh Draw"), STAT_InstancedMeshDraw, STATGROUP_ECS);
+DECLARE_CYCLE_STAT(TEXT("ECS: Instance Mesh Clean"), STAT_InstancedMeshClean, STATGROUP_ECS);
+
+DECLARE_CYCLE_STAT(TEXT("ECS: Raycast BP"), STAT_RaycastBP, STATGROUP_ECS);
+DECLARE_CYCLE_STAT(TEXT("ECS: Raycast Explosions"), STAT_RaycastExplosions, STATGROUP_ECS);
+DECLARE_CYCLE_STAT(TEXT("ECS: Raycast Enqueue"), STAT_RaycastResults, STATGROUP_ECS);
+
+DECLARE_CYCLE_STAT(TEXT("ECS: Lifetime count"), STAT_LifeCount, STATGROUP_ECS);
+DECLARE_CYCLE_STAT(TEXT("ECS: Lifetime Delete"), STAT_LifeDelete, STATGROUP_ECS);
 
 struct DebugDrawSystem :public System {
 
@@ -22,7 +42,6 @@ struct DebugDrawSystem :public System {
 
 };
 
-DECLARE_CYCLE_STAT(TEXT("ECS: Movement Update"), STAT_Movement, STATGROUP_ECS);
 struct MovementSystem :public System {
 
 	
@@ -33,8 +52,6 @@ struct MovementSystem :public System {
 
 };
 
-DECLARE_CYCLE_STAT(TEXT("ECS: Copy Transform To ECS"), STAT_CopyTransformECS, STATGROUP_ECS);
-DECLARE_CYCLE_STAT(TEXT("ECS: Unpack Actor Transform"), STAT_UnpackActorTransform, STATGROUP_ECS);
 struct CopyTransformToECSSystem :public System {	
 
 	void update(ECS_Registry &registry, float dt) override;
@@ -43,8 +60,6 @@ struct CopyTransformToECSSystem :public System {
 	void schedule(ECSSystemScheduler* sysScheduler) override;
 
 };
-DECLARE_CYCLE_STAT(TEXT("ECS: Copy Transform To Actor"), STAT_CopyTransformActor, STATGROUP_ECS);
-DECLARE_CYCLE_STAT(TEXT("ECS: Pack actor transform"), STAT_PackActorTransform, STATGROUP_ECS);
 
 struct CopyTransformToActorSystem :public System {
 
@@ -63,7 +78,6 @@ struct CopyTransformToActorSystem :public System {
 	TArray<ActorTransformParm> transforms;
 };
 
-DECLARE_CYCLE_STAT(TEXT("ECS: Spanwer System"), STAT_ECSSpawn, STATGROUP_ECS);
 struct ArchetypeSpawnerSystem :public System {
 
 	TMap<TSubclassOf<AECS_Archetype>, AECS_Archetype*> Archetypes;
@@ -107,7 +121,6 @@ public:
 	void schedule(ECSSystemScheduler* sysScheduler) override;
 };
 
-DECLARE_CYCLE_STAT(TEXT("ECS: Raycast System"), STAT_ECSRaycast, STATGROUP_ECS);
 struct RaycastSystem :public System {
 
 	void update(ECS_Registry &registry, float dt) override;
@@ -135,7 +148,7 @@ struct RaycastSystem :public System {
 	moodycamel::ConcurrentQueue<ExplosionStr> explosions;
 	moodycamel::ConcurrentQueue<ActorBpCall> actorCalls;
 };
-DECLARE_CYCLE_STAT(TEXT("ECS: Lifetime System"), STAT_Lifetime, STATGROUP_ECS);
+
 struct LifetimeSystem :public System {
 
 	static constexpr int DeletionSync = 200000;

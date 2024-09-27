@@ -7,7 +7,6 @@ void SpaceshipSystem::update(ECS_Registry& registry, float dt)
 	assert(OwnerActor);
 	SCOPE_CYCLE_COUNTER(STAT_Explosion);
 
-
 	registry.view<FSpaceship, FRotationComponent, FVelocity>().each([&, dt](auto entity, FSpaceship& ship, FRotationComponent& rotation, FVelocity& vel) {
 
 		rotation.rot = vel.vel.Rotation().Quaternion();
@@ -81,36 +80,36 @@ void BoidSystem::UpdateAllBoids(ECS_Registry& registry, float dt)
 
 
 		ParallelFor(NumProjectiles, [&](int32 Index)
-			{
-				ProjectileData data = ProjArray[Index];
+		{
+			ProjectileData data = ProjArray[Index];
 
-				//unpack projectile data
-				const FVector ProjPosition = data.pos.pos;
-				const EFaction ProjFaction = data.faction.faction;
-				const float ProjSeekStrenght = data.proj.HeatSeekStrenght;
-				const float ProjMaxVelocity = data.proj.MaxVelocity;
-				FVector& ProjVelocity = data.vel->vel;
+			//unpack projectile data
+			const FVector ProjPosition = data.pos.pos;
+			const EFaction ProjFaction = data.faction.faction;
+			const float ProjSeekStrenght = data.proj.HeatSeekStrenght;
+			const float ProjMaxVelocity = data.proj.MaxVelocity;
+			FVector& ProjVelocity = data.vel->vel;
 
 
-				const float ProjCheckRadius = 1000;
-				Foreach_EntitiesInRadius(ProjCheckRadius, ProjPosition, [&](GridItem& item) {
+			const float ProjCheckRadius = 1000;
+			Foreach_EntitiesInRadius(ProjCheckRadius, ProjPosition, [&](GridItem& item) {
 
-					if (item.Faction != ProjFaction)
-					{
-						const FVector TestPosition = item.Position;
+				if (item.Faction != ProjFaction)
+				{
+					const FVector TestPosition = item.Position;
 
-						const float DistSquared = FVector::DistSquared(TestPosition, ProjPosition);
+					const float DistSquared = FVector::DistSquared(TestPosition, ProjPosition);
 
-						const float AvoidanceDistance = ProjCheckRadius * ProjCheckRadius;
-						const float DistStrenght = FMath::Clamp(1.0 - (DistSquared / (AvoidanceDistance)), 0.1, 1.0) * dt;
-						const FVector AvoidanceDirection = TestPosition - ProjPosition;
+					const float AvoidanceDistance = ProjCheckRadius * ProjCheckRadius;
+					const float DistStrenght = FMath::Clamp(1.0 - (DistSquared / (AvoidanceDistance)), 0.1, 1.0) * dt;
+					const FVector AvoidanceDirection = TestPosition - ProjPosition;
 
-						ProjVelocity += (AvoidanceDirection.GetSafeNormal() * ProjSeekStrenght * DistStrenght);
-					}
-					});
+					ProjVelocity += (AvoidanceDirection.GetSafeNormal() * ProjSeekStrenght * DistStrenght);
+				}
+				});
 
-				ProjVelocity = ProjVelocity.GetClampedToMaxSize(ProjMaxVelocity);
-			});
+			ProjVelocity = ProjVelocity.GetClampedToMaxSize(ProjMaxVelocity);
+		});
 
 	}
 	//its not good to have both spaceship and projectile logic here, they should be on their own systems
