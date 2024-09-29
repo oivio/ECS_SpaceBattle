@@ -109,7 +109,7 @@ void  StaticMeshDrawSystem::schedule(ECSSystemScheduler* sysScheduler)
 
 						if (RenderMesh->GetInstanceCount() < MeshData->rendered)
 						{
-							RenderMesh->AddInstanceWorldSpace(RenderTransform);
+							RenderMesh->AddInstance(RenderTransform,true);
 						}
 						else
 						{
@@ -188,7 +188,7 @@ void ArchetypeSpawnerSystem::update(ECS_Registry &registry, float dt)
 	
 }
 
-PRAGMA_DISABLE_OPTIMIZATION
+UE_DISABLE_OPTIMIZATION_SHIP
 void ArchetypeSpawnerSystem::schedule(ECSSystemScheduler* sysScheduler)
 {
 	SystemTaskBuilder builder("Spawner", 1000000, sysScheduler,0.1);
@@ -294,7 +294,7 @@ void ArchetypeSpawnerSystem::schedule(ECSSystemScheduler* sysScheduler)
 	sysScheduler->AddTaskgraph(builder.FinishGraph());
 }
 
-PRAGMA_ENABLE_OPTIMIZATION
+UE_ENABLE_OPTIMIZATION_SHIP
 void RaycastSystem::update(ECS_Registry &registry, float dt)
 {
 	
